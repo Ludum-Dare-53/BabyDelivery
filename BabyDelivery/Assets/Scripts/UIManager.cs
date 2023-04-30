@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Events;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class UIManager : MonoBehaviour
     TMP_Text curMother;
     TMP_Text timer;
     TMP_Text remainingChildren;
-    
+
     Slider timerSlider;
     Slider healthSlider;
 
@@ -22,6 +23,8 @@ public class UIManager : MonoBehaviour
     Button selectionButtonC;
 
     private static UIManager _instance;
+
+    public delegate void SelectionEvent(Selection selection);
     public static UIManager Instance
     {
         get
@@ -41,10 +44,10 @@ public class UIManager : MonoBehaviour
         timer = GameObject.Find("timer").GetComponent<TMP_Text>();
         remainingChildren = GameObject.Find("remainingChildren").GetComponent<TMP_Text>();
 
-        timerSlider= GameObject.Find("timerSlider").GetComponent<Slider>();
+        timerSlider = GameObject.Find("timerSlider").GetComponent<Slider>();
         healthSlider = GameObject.Find("healthSlider").GetComponent<Slider>();
 
-        deliveryButton=GameObject.Find("deliveryButton").GetComponent<Button>();
+        deliveryButton = GameObject.Find("deliveryButton").GetComponent<Button>();
         selectionButtonA = GameObject.Find("selectionButtonA").GetComponent<Button>();
         selectionButtonB = GameObject.Find("selectionButtonB").GetComponent<Button>();
         selectionButtonC = GameObject.Find("selectionButtonC").GetComponent<Button>();
@@ -60,11 +63,11 @@ public class UIManager : MonoBehaviour
     }
     public void UISetTextTimer(string text)
     {
-        timer.text = text;
+        timer.text = "Time:"+" "+text+"s";
     }
     public void UISetRemainingChildren(string text)
     {
-        remainingChildren.text = "Remaining children:"+""+text;
+        remainingChildren.text = "Remaining children:" + "" + text;
     }
 
     public void UISetValueTimerSlider(float value)
@@ -81,22 +84,25 @@ public class UIManager : MonoBehaviour
         deliveryButton.onClick.RemoveAllListeners();
         deliveryButton.onClick.AddListener(action);
     }
-    public void UISetButtonSelectionA(UnityAction action)
+    public void UISetButtonSelectionA(SelectionEvent selection,Selection selectionA)
     {
         selectionButtonA.onClick.RemoveAllListeners();
-        selectionButtonA.onClick.AddListener(action);
+        selectionButtonA.onClick.AddListener(delegate { selection(selectionA); });
     }
-    public void UISetButtonSelectionB(UnityAction action)
+    public void UISetButtonSelectionB(SelectionEvent selection,Selection selectionB)
     {
         selectionButtonB.onClick.RemoveAllListeners();
-        selectionButtonB.onClick.AddListener(action);
+        selectionButtonB.onClick.AddListener(delegate { selection(selectionB); });
     }
-    public void UISetButtonSelectionC(UnityAction action)
+    public void UISetButtonSelectionC(SelectionEvent selection,Selection selectionC)
     {
         selectionButtonC.onClick.RemoveAllListeners();
-        selectionButtonC.onClick.AddListener(action);
+        selectionButtonC.onClick.AddListener(delegate { selection(selectionC); });
     }
-
+    public void Restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
     void Start()
     {
         

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: 2
   m_EditorClassIdentifier: 
   ID: 2
-  portrait: {fileID: -2030588614, guid: ed9186b08df886c4486d5fae09f5632f, type: 3}
+  portrait: {fileID: 21300000, guid: 6444485d0a8ab3747bdd1c9bc563c9b7, type: 3}

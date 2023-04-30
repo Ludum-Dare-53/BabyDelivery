@@ -60,6 +60,8 @@
     <Compile Include="Assets\Scripts\Species.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\SelectionsManager.cs" />
+    <Compile Include="Assets\Scripts\Drawing\Drawable.cs" />
+    <Compile Include="Assets\Scripts\Drawing\DrawingSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
