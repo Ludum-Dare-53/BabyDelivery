@@ -35,7 +35,13 @@ public class GameManager : MonoBehaviour
     bool canChose=false;
 
     int shineCount = 0;
-    
+
+    public bool isPaused;
+    public Image pauseScreen;
+    public Image titleScreen;
+    public bool isGameActive;
+    public Button startButton;
+
 
     void Start()
     {
@@ -48,6 +54,7 @@ public class GameManager : MonoBehaviour
         curHealth = totalHealth;
         winPanel = GameObject.Find("Win");
         failPanel = GameObject.Find("Fail");
+        startButton.onClick.AddListener(StartGame);
         winPanel.SetActive(false);
         failPanel.SetActive(false);
 
@@ -62,7 +69,11 @@ public class GameManager : MonoBehaviour
     {
         UIManager.Instance.UISetValueTimerSlider(curRemainingTime / totalTime);
         UIManager.Instance.UISetTextTimer(((int)curRemainingTime).ToString());
-        curRemainingTime -= Time.deltaTime;
+        if(isGameActive)
+        {
+            curRemainingTime -= Time.deltaTime;
+        }
+
 
         if (curHealth <= 0||curRemainingTime<=0)
         {
@@ -72,6 +83,17 @@ public class GameManager : MonoBehaviour
         {
             EndGame(true);
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape) && isGameActive)
+        {
+            PauseGame();
+        }
+    }
+
+    public void StartGame()
+    {
+        isGameActive = true;
+        titleScreen.gameObject.SetActive(false);
     }
 
     public void EndGame(bool isWin)
@@ -85,7 +107,25 @@ public class GameManager : MonoBehaviour
             failPanel.SetActive(true);
         }
         Time.timeScale = 0f;
+        isGameActive = false;
     }
+
+    void PauseGame()
+    {
+        if (!isPaused)
+        {
+            Time.timeScale = 0;
+            isPaused = true;
+            pauseScreen.gameObject.SetActive(true);
+        }
+        else
+        {
+            Time.timeScale = 1;
+            isPaused = false;
+            pauseScreen.gameObject.SetActive(false);
+        }
+    }
+
     public void NewParents()
     {
         int i=Random.Range(0,species.Count);
@@ -98,6 +138,7 @@ public class GameManager : MonoBehaviour
         curParents = new Selection(species[i], species[j]);
         selectionsManager.SetParentsVisible(false);
         BuildSelection();
+        drawable.enabled = true;
         drawable.ResetCanvas();
 
         UIManager.Instance.UISetTextCurFather(curParents.father.ID.ToString());
@@ -133,6 +174,7 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.UISetButtonSelectionB(CompareParents, pickedSelections[1]);
         UIManager.Instance.UISetButtonSelectionC(CompareParents, pickedSelections[2]);
         canChose = true;
+        drawable.enabled = false;
     }
 
     public void CompareParents(Selection parents)
